@@ -2,7 +2,7 @@ import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import FeaturedTeachers from "../components/FeaturedTeachers";
 import WhyChooseUs from "../components/WhyChooseUs";
-import MobileAppBanner from "../components/MobileAppBanner";
+import AIAssistant from "../components/AIAssistant";
 
 const Index = () => {
   return (
@@ -12,7 +12,7 @@ const Index = () => {
         <HeroSection />
         <FeaturedTeachers />
         <WhyChooseUs />
-        <MobileAppBanner />
+        <AIAssistant />
       </main>
     </div>
   );

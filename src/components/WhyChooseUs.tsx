@@ -42,10 +42,22 @@ const WhyChooseUs = () => {
     }
   ];
 
-  const competitors = [
-    { name: "Superprof", features: ["❌ Pagamento per contatto", "❌ Insegnanti non verificati", "❌ Nessun supporto AI", "❌ Design datato"] },
-    { name: "Ripetizioni.it", features: ["❌ Pochi insegnanti", "❌ Nessuna app mobile", "❌ Processo lento", "❌ Prezzi nascosti"] },
-    { name: "LearnLink", features: ["✅ €29/mese contatti illimitati", "✅ Tutti insegnanti verificati", "✅ AI Study Assistant", "✅ App mobile-first"] }
+  const benefits = [
+    {
+      title: "Accesso Illimitato",
+      description: "Con soli €29/mese accedi a tutti gli insegnanti della piattaforma senza limitazioni.",
+      features: ["Contatti illimitati", "Nessun costo aggiuntivo", "Cancellazione in qualsiasi momento"]
+    },
+    {
+      title: "Qualità Garantita", 
+      description: "Ogni insegnante viene selezionato e verificato dal nostro team di esperti.",
+      features: ["Processo di selezione rigoroso", "Certificazioni verificate", "Feedback continuo"]
+    },
+    {
+      title: "Tecnologia Avanzata",
+      description: "La nostra piattaforma utilizza AI e tecnologie moderne per ottimizzare l'apprendimento.",
+      features: ["Assistente AI integrato", "Matching intelligente", "Analytics personalizzati"]
+    }
   ];
 
   return (
@@ -97,32 +109,29 @@ const WhyChooseUs = () => {
           ))}
         </div>
 
-        {/* Comparison Table */}
+        {/* Benefits Section */}
         <div className="max-w-5xl mx-auto">
           <h3 className="text-2xl font-bold text-center mb-8">
-            Confronto con la <span className="text-gradient-primary">Concorrenza</span>
+            I Vantaggi di <span className="text-gradient-primary">LearnLink Premium</span>
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {competitors.map((competitor, index) => (
-              <div key={index} className={`card-premium ${competitor.name === 'LearnLink' ? 'ring-2 ring-primary shadow-premium' : ''}`}>
+            {benefits.map((benefit, index) => (
+              <div key={index} className="card-premium">
                 <div className="text-center mb-6">
-                  <h4 className={`text-xl font-bold ${competitor.name === 'LearnLink' ? 'text-gradient-primary' : 'text-foreground'}`}>
-                    {competitor.name}
+                  <h4 className="text-xl font-bold text-gradient-primary mb-2">
+                    {benefit.title}
                   </h4>
-                  {competitor.name === 'LearnLink' && (
-                    <Badge className="mt-2 bg-gradient-to-r from-accent/20 to-primary/20 text-accent">
-                      La Nostra Piattaforma
-                    </Badge>
-                  )}
+                  <p className="text-muted-foreground text-sm">
+                    {benefit.description}
+                  </p>
                 </div>
                 
                 <div className="space-y-3">
-                  {competitor.features.map((feature, featureIndex) => (
+                  {benefit.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-center text-sm">
-                      <span className={feature.startsWith('✅') ? 'text-success' : 'text-muted-foreground'}>
-                        {feature}
-                      </span>
+                      <CheckCircle className="h-4 w-4 text-success mr-2 flex-shrink-0" />
+                      <span className="text-foreground">{feature}</span>
                     </div>
                   ))}
                 </div>
