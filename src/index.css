@@ -156,11 +156,25 @@
 }
 
 @layer components {
+  /* Custom Shadow Classes */
+  .shadow-premium {
+    box-shadow: var(--shadow-premium);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
   /* Premium Button Variants */
   .btn-hero {
     @apply bg-gradient-to-r from-primary to-primary-dark text-primary-foreground;
-    @apply px-8 py-4 rounded-xl font-semibold text-lg shadow-premium;
-    @apply hover:shadow-glow hover:scale-105 transition-all duration-300;
+    @apply px-8 py-4 rounded-xl font-semibold text-lg;
+    @apply hover:scale-105 transition-all duration-300;
+    box-shadow: var(--shadow-premium);
+  }
+
+  .btn-hero:hover {
+    box-shadow: var(--shadow-glow);
   }
 
   .btn-accent {
