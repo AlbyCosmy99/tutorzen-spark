@@ -199,8 +199,8 @@
   .card-teacher {
     @apply bg-gradient-to-br from-card via-card to-secondary/30;
     @apply p-6 rounded-2xl shadow-md border border-border/30;
-    @apply hover:shadow-premium hover:-translate-y-2 hover:border-primary/20;
-    @apply transition-all duration-300 cursor-pointer;
+    @apply hover:shadow-lg hover:-translate-y-1 hover:border-primary/20;
+    @apply transition-all duration-200 cursor-pointer;
   }
 
   /* Gradient Text */

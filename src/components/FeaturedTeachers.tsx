@@ -85,9 +85,7 @@ const FeaturedTeachers = () => {
         {/* Teachers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
           {featuredTeachers.map((teacher, index) => (
-            <div key={index} className="animate-float" style={{ animationDelay: `${index * 0.2}s` }}>
-              <TeacherCard {...teacher} />
-            </div>
+            <TeacherCard key={index} {...teacher} />
           ))}
         </div>
 
