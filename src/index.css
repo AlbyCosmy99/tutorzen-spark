@@ -200,7 +200,7 @@
     @apply bg-gradient-to-br from-card via-card to-secondary/30;
     @apply p-6 rounded-2xl shadow-md border border-border/30;
     @apply hover:shadow-premium hover:-translate-y-2 hover:border-primary/20;
-    @apply transition-all duration-400 cursor-pointer;
+    @apply transition-all duration-300 cursor-pointer;
   }
 
   /* Gradient Text */
