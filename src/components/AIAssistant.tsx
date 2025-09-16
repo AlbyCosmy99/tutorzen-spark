@@ -6,14 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Bot, Send, Sparkles, BookOpen, Calculator, Languages, Atom, MessageCircle, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const AIAssistant = () => {
   const [message, setMessage] = useState("");
-  const [apiKey, setApiKey] = useState("");
   const [conversation, setConversation] = useState<Array<{role: string, content: string}>>([]);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showApiInput, setShowApiInput] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const subjects = [
     { icon: Calculator, name: "Matematica", color: "from-blue-500 to-blue-600" },
@@ -25,13 +29,13 @@ const AIAssistant = () => {
   const handleSendMessage = async () => {
     if (!message.trim()) return;
     
-    if (!apiKey.trim()) {
-      setShowApiInput(true);
+    if (!user) {
       toast({
-        title: "API Key richiesta",
-        description: "Inserisci la tua Perplexity API key per utilizzare l'assistente AI.",
+        title: "Accesso richiesto",
+        description: "Devi essere loggato per utilizzare l'assistente AI.",
         variant: "destructive"
       });
+      navigate("/auth");
       return;
     }
 
@@ -39,57 +43,42 @@ const AIAssistant = () => {
     const userMessage = message;
     setMessage("");
     
+    // Add user message to conversation immediately
     const newConversation = [...conversation, { role: "user", content: userMessage }];
     setConversation(newConversation);
 
     try {
-      const response = await fetch('https://api.perplexity.ai/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.1-sonar-small-128k-online',
-          messages: [
-            {
-              role: 'system',
-              content: 'Sei un assistente AI specializzato nell\'educazione. Aiuti studenti con domande di studio, spiegazioni di concetti e consigli per l\'apprendimento. Rispondi sempre in italiano in modo chiaro e professionale.'
-            },
-            ...newConversation.map(msg => ({
-              role: msg.role,
-              content: msg.content
-            }))
-          ],
-          temperature: 0.2,
-          top_p: 0.9,
-          max_tokens: 1000,
-          return_images: false,
-          return_related_questions: false,
-          frequency_penalty: 1,
-          presence_penalty: 0
-        }),
+      const { data, error } = await supabase.functions.invoke('chat-ai', {
+        body: { 
+          message: userMessage,
+          conversationId: conversationId
+        }
       });
 
-      if (!response.ok) {
-        throw new Error('Errore nella richiesta API');
-      }
+      if (error) throw error;
 
-      const data = await response.json();
-      const aiResponse = data.choices[0]?.message?.content || "Scusa, non sono riuscito a elaborare la tua richiesta.";
+      const { response: aiResponse, conversationId: newConversationId } = data;
       
+      // Update conversation with AI response
       setConversation([...newConversation, { role: "assistant", content: aiResponse }]);
+      
+      if (newConversationId && !conversationId) {
+        setConversationId(newConversationId);
+      }
       
       toast({
         title: "Risposta generata",
         description: "L'assistente AI ha risposto alla tua domanda.",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error('AI Chat error:', error);
       toast({
         title: "Errore",
-        description: "Errore nel contattare l'assistente AI. Controlla la tua API key.",
+        description: "Errore nel contattare l'assistente AI. Riprova.",
         variant: "destructive"
       });
+      // Remove the user message from conversation on error
+      setConversation(conversation);
     } finally {
       setIsLoading(false);
     }
@@ -184,29 +173,7 @@ const AIAssistant = () => {
                         </div>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowApiInput(!showApiInput)}
-                    >
-                      <Settings className="h-4 w-4" />
-                    </Button>
                   </div>
-                  
-                  {showApiInput && (
-                    <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                      <Input
-                        type="password"
-                        placeholder="Inserisci la tua Perplexity API key"
-                        value={apiKey}
-                        onChange={(e) => setApiKey(e.target.value)}
-                        className="mb-2"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Ottieni la tua API key gratuitamente su perplexity.ai
-                      </p>
-                    </div>
-                  )}
                 </div>
 
                 {/* Chat Messages */}
